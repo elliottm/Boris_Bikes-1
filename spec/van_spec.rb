@@ -5,8 +5,10 @@ describe Van do
 	let(:van) { Van.new }
 	let(:bike) { double :bike, broken?: false }
 	let(:bike1) { double :bike, broken?: false }
+	let(:bike2) { double :bike, broken?: false }
 	let(:broken_bike) { double :broken_bike, broken?: true }
 	let(:broken_bike1) { double :broken_bike, broken?: true }
+	let(:garage) { double :garage }
 
 	it 'can hold a bike' do
 		van = Van.new [bike]
@@ -15,18 +17,6 @@ describe Van do
 
 	it 'can be empty' do
 		expect(van).not_to have_bike
-	end
-
-	it 'collects a broken bike from a station' do
-		station = double :station, { dock: nil, release_broken_bike: broken_bike }
-		expect(station).to receive(:release_broken_bike)
-		van.collect_broken_bike_from station
-	end
-
-	it 'has a broken bike after collecting a broken bike' do
-		station = double :station, release_broken_bike: broken_bike 
-		van.collect_broken_bike_from station		
-		expect(van).to have_bike			
 	end
 
 	it 'knows how many bikes it has' do
@@ -74,10 +64,32 @@ describe Van do
   	expect(van.bike_count).to eq 1
 	end
 
-	it 'can deliver broken bikes to a garage' do
-		garage = double :garage 
+	it 'can dock broken bikes at a garage' do
 		expect(garage).to receive(:dock)
-		van.deliver_broken_bikes_to garage
+		van.dock_broken_bike_at garage
 	end
 
+	it 'docks only broken bikes at a garage' do
+		garage = double :garage, { dock: nil }
+		van = Van.new [bike, bike1, broken_bike, broken_bike1]
+		van.dock_all_broken_bikes_at garage
+		expect(van.broken_bikes).to eq []
+	end
+
+	it 'collect fixed bikes from a garage' do
+		garage = double :garage, { release_working_bikes: [bike, bike1, bike2] }
+		expect(van.collect_working_bikes_from(garage)).to eq [bike, bike1, bike2]
+	end
+
+	it 'can be filled with working bikes from a garage' do
+		garage = double :garage, { working_bikes: [bike, bike1, bike2], release_x_working_bikes: [bike, bike1, bike2] }
+		van.fill_with_working_bikes_from garage
+		expect(van.working_bikes.count).to eq 3 
+	end
+
+	it 'get filled with maximum possible working bikes' do
+		garage = double :garage, { working_bikes: Array.new(50, bike) }
+		van = Van.new [broken_bike, bike1, bike2]
+		expect(van.number_of_working_bikes_to_release_from(garage)).to eq 7
+	end
 end
