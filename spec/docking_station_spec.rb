@@ -5,6 +5,9 @@ describe DockingStation do
 	let(:station) { DockingStation.new [], 20 }
 	let(:bike) { double :bike, broken?: false }
 	let(:broken_bike) { double :broken_bike, broken?: true }
+	let(:broken_bike2) { double :broken_bike, broken?: true }
+	let(:broken_bike3) { double :broken_bike, broken?: true }
+
 
 	it 'can accept a bike' do
 		expect(station.bike_count).to eq 0		
@@ -65,7 +68,8 @@ describe DockingStation do
 
 	it 'releases a select number of broken bikes' do
 		station.dock(bike)
-		18.times { station.dock(broken_bike) }
+		station.dock(broken_bike)
+		station.dock(broken_bike2)
 		expect(station.release_x_broken_bikes(2).length).to eq 2
 	end
 

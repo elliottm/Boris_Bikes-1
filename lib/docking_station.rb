@@ -1,5 +1,5 @@
 class DockingStation
-	# attr_accessor :bikes
+
 	def initialize bikes = [], capacity = 20
 		@bikes = bikes
 		@capacity = capacity
@@ -44,11 +44,12 @@ class DockingStation
 	end
 
 	def release_all_broken_bikes
-		broken_bikes.map{ release_broken_bike}
+		broken_bikes.map { release_broken_bike }
 	end
 
 	def release_x_broken_bikes(x)
-		broken_bikes[0,x].map{ release_broken_bike}
+		raise "Not that many broken bikes" if broken_bikes.count < x
+		Array.new(x).map { release_broken_bike }
 	end
 
 end

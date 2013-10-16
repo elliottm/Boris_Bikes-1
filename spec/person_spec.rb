@@ -48,9 +48,9 @@ describe Person do
 		expect(person).not_to have_bike		
 	end
 
-	it 'cannot rent a bike if already has one' do
+	it 'cannot rent a bike if it already has one' do
 		station = double :station, { release_bike: bike }
-		person = Person.new :bike
-		expect(person.rent_bike_from(station)).to be_false
+		person = Person.new bike
+		expect(lambda { person.rent_bike_from(station) }).to raise_error(RuntimeError)
 	end
 end
