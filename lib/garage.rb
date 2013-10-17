@@ -10,6 +10,7 @@ class Garage
 	end
 
 	def dock bike
+		raise "Station is full" if full?
 		@bikes << bike
 	end
 
@@ -17,9 +18,20 @@ class Garage
 		bike.fix!
 	end
 
+	def full? 
+		bike_count == @capacity
+	end
+
 	def working_bikes 
 		@bikes.reject { |bike| bike.broken? }
 	end
 
+	def release_working_bike
+		@bikes.delete(working_bikes.first)
+	end
 
+	def release_x_working_bikes x
+		raise "There are not #{x} working bikes at the garage" if working_bikes.count < x
+		Array.new(x).map { release_working_bike }
+	end
 end
