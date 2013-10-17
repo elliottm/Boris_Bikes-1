@@ -55,10 +55,6 @@ class Van
 		broken_bikes.each { dock_broken_bike_at garage }
 	end
 
-	def collect_working_bikes_from garage
-		garage.release_working_bikes.each { |bike| @bikes << bike }
-	end
-
 	def number_of_working_bikes_to_release_from garage
 		return slots_available if slots_available < garage.working_bikes.count
 		garage.working_bikes.count

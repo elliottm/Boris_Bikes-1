@@ -76,11 +76,6 @@ describe Van do
 		expect(van.broken_bikes).to eq []
 	end
 
-	it 'collect fixed bikes from a garage' do
-		garage = double :garage, { release_working_bikes: [bike, bike1, bike2] }
-		expect(van.collect_working_bikes_from(garage)).to eq [bike, bike1, bike2]
-	end
-
 	it 'can be filled with working bikes from a garage' do
 		garage = double :garage, { working_bikes: [bike, bike1, bike2], release_x_working_bikes: [bike, bike1, bike2] }
 		van.fill_with_working_bikes_from garage
