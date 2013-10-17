@@ -18,6 +18,10 @@ class Garage
 		bike.fix!
 	end
 
+	def fix_all_bikes
+		broken_bikes.each { |bike| fix!(bike) }
+	end
+
 	def full? 
 		bike_count == @capacity
 	end
@@ -26,6 +30,10 @@ class Garage
 		@bikes.reject { |bike| bike.broken? }
 	end
 
+	def broken_bikes
+		@bikes.select { |bike| bike.broken? }
+	end
+	
 	def release_working_bike
 		@bikes.delete(working_bikes.first)
 	end
